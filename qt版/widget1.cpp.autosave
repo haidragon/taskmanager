@@ -1,0 +1,95 @@
+#include "ProcessWidget.h"
+
+#include <QDebug>
+#include <QString>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QTreeView>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QSortFilterProxyModel>
+//void PrintProcessList();
+
+
+
+ProcessWidget::ProcessWidget()
+{
+    resize(700,350);
+    proxyModel = new QSortFilterProxyModel;
+
+
+    proxyView = new QTreeView;
+    proxyView->setRootIsDecorated(false);
+    proxyView->setAlternatingRowColors(true);
+    proxyView->setModel(proxyModel);
+    proxyView->setSortingEnabled(true);
+
+    proxyGroupBox = new QGroupBox(tr("进程信息"));
+
+    QHBoxLayout *proxyLayout = new QHBoxLayout;
+    proxyLayout->addWidget(proxyView);
+    proxyGroupBox->setLayout(proxyLayout);
+
+
+    killbutton = new QPushButton("结束进程");
+
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(proxyGroupBox);
+    mainLayout->addWidget(killbutton, 0, Qt::AlignRight |  Qt::AlignJustify);
+
+    connect(killbutton,SIGNAL(clicked()),this,SLOT(killprocess()));
+
+    setLayout(mainLayout);
+
+    proxyView->sortByColumn(1, Qt::AscendingOrder);
+
+
+
+}
+
+void ProcessWidget::setSourceModel(QAbstractItemModel *model)
+{
+    QAbstractItemModel *oldmodel = proxyModel->sourceModel();
+    proxyModel->setSourceModel(model);
+    if(oldmodel)
+        oldmodel->destroyed();
+}
+
+void ProcessWidget::updatemodel()
+{
+
+}
+
+void ProcessWidget::killprocess()
+{
+
+}
+
+int ProcessWidget::GetProcessNum()
+{
+    return proxyModel->rowCount();
+}
+
+
+/*
+void PrintProcessList(){
+ HANDLE pHandle;
+ PROCESSENTRY32 proc;
+ DWORD procId;
+ pHandle = CreateToolhelp32Snapshot(0x2,0x0);
+ if(pHandle==INVALID_HANDLE_VALUE){
+  return;
+ }
+ proc.dwSize = sizeof(PROCESSENTRY32);
+ while(Process32Next(pHandle,&proc)){
+     QString str1 = (QString::fromUtf16(reinterpret_cast<const unsigned short *>(proc.szExeFile)));
+     //prostr.fromWCharArray(proc.szExeFile);
+     //prostr.fromStdWString(proc.szExeFile);
+     qDebug() << "ProcessName : " << str1 << " - ProcessID : " << proc.th32ProcessID;
+  //printf("ProcessName : %s - ProcessID : %d\r\n",proc.szExeFile,proc.th32ProcessID);
+ }
+ CloseHandle(pHandle);
+ return;
+}
+*/

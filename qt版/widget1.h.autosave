@@ -1,0 +1,36 @@
+#ifndef WIDGET1_H
+#define WIDGET1_H
+#include <QWidget>
+
+class QAbstractItemModel;
+class QSortFilterProxyModel;
+class QGroupBox;
+class QTreeView;
+class QPushButton;
+
+class ProcessWidget :public QWidget
+{
+    Q_OBJECT
+public:
+    ProcessWidget();
+
+    void setSourceModel(QAbstractItemModel *model);
+    int GetProcessNum();
+
+private slots:
+    void updatemodel();
+    void killprocess();
+
+private:
+    QSortFilterProxyModel *proxyModel;
+
+    //QGroupBox *sourceGroupBox;
+    QGroupBox *proxyGroupBox;
+    //QTreeView *sourceView;
+    QTreeView *proxyView;
+    QPushButton *killbutton;
+
+};
+
+
+#endif // WIDGET1_H
